@@ -1,0 +1,164 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |				
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10                                  	
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     rhoEnergyFoamOriginalOpt;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         0.1;
+
+//deltaT          1e-05;
+deltaT          1e-08;
+//deltaT          5e-04;	//SB OK
+
+writeControl    runTime; 
+
+//This option add numerical diffusion
+//writeControl    adjustableRunTime;
+
+writeInterval   0.01;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  12;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes; //no;
+maxCo           0.4;
+//maxDeltaT       0.00001;	
+maxDeltaT       0.01;	
+
+pressArtDiff    true; //activate artificial diffusion on pressure
+convArtDiff     true; //activate artificial diffusion on pressure
+
+ku        0.85;
+kp        0.85;
+ducLevelPress       0.00; // pressure diffusion threshold 
+ducLevelConv        0.00; // convective diffusion threshold
+epsilon             1.279; //14000; //1.2729; // u_infty^2/L
+minfty              1.; // Reference Mach^2 number needed by AUSM flux (free stream Mach number)
+
+// ************************************************************************* //
+
+functions
+{
+
+///////////////////////////////////////////////////////////////////////////
+writeduc
+{
+    type writeObjects;
+    libs ( "libutilityFunctionObjects.so" );
+    objects ("ducSensor");
+    writeControl outputTime;
+    writeInterval       1;
+}
+/*
+minmaxdomain_scalar
+{
+    type            volFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+
+    enabled 	    true; 	//true or false
+    log             true;	//write to screen
+    
+    //writeControl    writeTime;
+    writeControl    timeStep;
+    writeInterval   1;
+
+    writeFields     false;	//write solution to field value - Not needed when only reporting value to screen
+
+    writeLocation   true;	//write location in the output file
+
+    //mode component;
+
+    select      all;
+
+    operation       none;
+
+    fields
+    (
+        p T
+    );
+}
+
+minmaxdomain_vector
+{
+    type            volFieldValue;
+    libs            ("libfieldFunctionObjects.so");
+
+    enabled 	    true; 	//true or false
+    log             true;	//write to screen
+    
+    //writeControl    writeTime;
+    writeControl    timeStep;
+    writeInterval   1;
+
+    writeFields     false;	//write solution to field value - Not needed when only reporting value to screen
+
+    writeLocation   true;	//write location in the output file
+
+    //mode component;
+
+    select      all;
+
+    operation       none;
+
+    fields
+    (
+        U
+    );
+}
+
+mindomain_scalar
+{
+    $minmaxdomain_scalar
+    operation       min;
+}
+
+mindomain_vector
+{
+    $minmaxdomain_vector
+    operation       minMag;
+}
+
+maxdomain_scalar
+{
+    $minmaxdomain_scalar
+    operation       max;
+}
+
+maxdomain_vector
+{
+    $minmaxdomain_vector
+    operation       maxMag;
+}
+
+*/
+///////////////////////////////////////////////////////////////////////////
+
+};

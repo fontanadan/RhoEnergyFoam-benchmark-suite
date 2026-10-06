@@ -1,0 +1,72 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//fluxScheme      Kurganov;
+
+ddtSchemes
+{
+    default         none;
+}
+
+gradSchemes
+{
+   // default         cellLimited Gauss linear 1;
+//default cellMDLimited leastSquares 1;
+//default cellLimited<cubic> 1 leastSquares 1;
+default cellLimited<Venkatakrishnan> leastSquares 1;
+
+	/*
+grad(p) Gauss linear;
+grad(rho) Gauss linear;
+grad(magSqr(U)) Gauss linear;
+grad(U) Gauss linear;
+grad(T) Gauss linear;
+grad(magSqr(rhoU)) Gauss linear;
+grad((rho*H)) Gauss linear;
+curl(U) Gauss linear;
+*/
+
+}
+
+divSchemes
+{
+    //default         Gauss linear;
+    div(U)          Gauss linear;
+    div(tauMC)      Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default          midPoint; //pointLinear; //midPoint
+    reconstruct(p)   Minmod;
+    reconstruct(T)   Minmod;
+    reconstruct(rho) Minmod;
+    reconstruct(U)   Minmod;
+}
+
+snGradSchemes
+{
+    default         corrected;
+}
+
+
+// ************************************************************************* //

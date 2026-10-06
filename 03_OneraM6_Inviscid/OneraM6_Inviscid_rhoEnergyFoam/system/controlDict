@@ -1,0 +1,122 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     rhoEnergyFoamOriginalOpt;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         20;
+
+deltaT          0.000000002;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo         1.0;
+
+maxDeltaT       1.;
+
+pressArtDiff    true; //activate artificial diffusion on pressure
+convArtDiff     true; //activate artificial diffusion on pressure
+
+ducLevelPress       0.00;
+ducLevelConv        0.05;
+epsilon             0.98666435;
+kp                  0.25;//25;
+ku                  0.75;//75;
+rm		    0.8395;
+minfty              0.7047;
+
+functions
+{
+ 
+ #include "fieldAverageDict"
+ 
+ forces
+ {
+ type forces;
+ libs ("libforces.so");
+ rhoName rho;
+ UName  U;
+ pName  p;
+ rhoInf 1;
+ patches (wing);
+ CofR (0 0 0);
+ writeControl  timeStep;
+ writeInterval 1;
+ }
+ 
+ forceCoeffs
+ {
+ // rhoInf - reference density
+ // CofR - Centre of rotation
+ // dragDir - Direction of drag coefficient
+ // liftDir - Direction of lift coefficient
+ // pitchAxis - Pitching moment axis
+ // magUinf - free stream velocity magnitude
+ // lRef - reference length
+ // Aref - reference area
+ type forceCoeffs;
+ libs ("libforces.so");
+ patches (wing);
+ rhoName rho;
+ UName  U;
+ pName  p;
+ rhoInf 1;
+ CofR (0 0 0);
+ liftDir (-0.0533816897587605 0.99857418111951 0);
+ dragDir (0.99857418111951  0.0533816897587605 0);
+ pitchAxis (0 0 1);
+ magUInf 0.993309795582425;
+ lRef 1; 
+ Aref 1.; 
+ writeControl  timeStep;
+ writeInterval 1;
+}
+    writeduc
+    {
+        type writeObjects;
+        libs ( "libutilityFunctionObjects.so" );
+        objects ("ducSensor");
+        writeControl outputTime;
+        writeInterval       1;
+   }
+};
+
+
+// ************************************************************************* //

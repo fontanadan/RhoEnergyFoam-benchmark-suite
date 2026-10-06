@@ -1,0 +1,225 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     rhoEnergyFoam;
+
+startFrom       latestTime; //startTime;
+
+startTime       1000;
+
+stopAt          endTime;
+
+endTime         2000;
+
+deltaT          0.000002;
+
+writeControl    adjustableRunTime;
+
+writeInterval   50.;
+
+purgeWrite      50;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.7;
+
+maxDeltaT       1.;
+
+pressArtDiff    true; //activate artificial diffusion on pressure term
+convArtDiff     false; //true; //activate artificial diffusion on convective term
+
+ducLevelPress       0.00;
+ducLevelConv        0.05;
+epsilon             0.014;
+minfty		    0.01; //Reference Mach^2 number needed by AUSM flux
+ku                  0.75;
+kp                  0.25;
+sigma               1.;
+
+
+functions
+{
+	
+  	#include "fieldAverageDict"
+  
+	Forces
+	{
+	type 		forces;
+	libs 		(forces);
+	rhoName 	rhoInf;
+	UName 		U;
+	pName 		p;
+	rhoInf 		1;
+	patches		(cylinder);
+	CofR		(0 0 0);
+	writeControl 	outputTime;
+	writeInterval	1;
+	}
+
+  	ProbeP
+  	{
+        type            probes;
+        libs            (sampling);
+        name            probes;
+        writeControl    outputTime;
+        writeInterval   1;
+        fields          (p);
+        // Optional: do not recalculate cells if mesh moves
+        //fixedLocations  false;
+        // Optional: interpolation scheme to use (default is cell)
+        //interpolationScheme cellPoint;
+        probeLocations
+        (
+            ( -0.5 0. 0. )      // at cylinder leading edge
+            ( 0. 0.5 0. )      // at cylinder upper side 
+        );
+        // Optional: filter out points that haven't been found. Default
+        //           is to include them (with value -VGREAT)
+        //includeOutOfBounds  true;
+  	}
+
+	ForcesCoeffs
+    	{
+        type            forceCoeffs;
+        libs            (forces);
+        writeControl       timeStep;
+        outputInterval      1;
+
+        patches
+        (
+           cylinder 
+        );
+        p               p;
+        U               U;
+        rho             rhoInf;
+        rhoInf      1;
+
+        CofR        (0 0 0);
+        liftDir     (0 1 0);
+        dragDir     (1 0 0);
+        pitchAxis   (0 0 1);
+        magUInf     0.1183;
+        lRef        1.;
+        Aref        1.; //since 2D simulation
+    	}
+    
+	Sample
+    	{
+        type            sets;
+        libs            (sampling);
+        writeControl    outputTime;
+	writeInterval   1;
+        interpolationScheme cellPoint;
+        setFormat raw;
+    	sets
+       	(
+
+   		y075
+		{
+			type	cloud;
+			axis	y;
+			points	(#include "y075.dat");
+			interpolate true;
+		}
+
+   		y125
+		{
+			type	cloud;
+			axis	y;
+			points	(#include "y125.dat");
+			interpolate true;
+		}
+
+
+
+   		top075
+		{
+			type	cloud;
+			axis	y;
+			points	(#include "075top.dat");
+			interpolate true;
+		}
+
+		bot075
+		{	
+			type 	cloud;
+			axis 	y;
+			points	(#include "075bot.dat");
+			interpolate true;
+		}
+
+	 	top
+    		{
+        		type    cloud;
+        		axis    x;
+        		points 	(#include "topcyl.dat");
+    			interpolate true ;
+    		}
+   		bottom
+    		{
+        		type    cloud;
+        		axis    x;
+        		points  (#include "botcyl.dat");
+    			interpolate true ;
+    		}
+		
+		XD075
+                {
+                        type    cloud;
+                        axis    y;
+                        points  (#include "coor075.dat");
+                        interpolate true;
+                }
+
+                XD150
+                {
+                        type    cloud;
+                        axis    y;
+                        points  (#include "coor150.dat");
+                        interpolate true;
+                }
+
+	);
+	fields          (p pMean UMean rhoUMean);
+	}
+
+  	writeduc
+  	{
+        type writeObjects;
+        libs ( "libutilityFunctionObjects.so" );
+        objects ("ducSensor");
+        writeControl     outputTime;
+	writeInterval		1;
+  	}
+
+	
+};
+
+
+// ************************************************************************* //

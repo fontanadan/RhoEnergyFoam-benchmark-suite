@@ -1,0 +1,42 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+
+        type            probes;
+        libs            (sampling);
+ 
+        // Name of the directory for probe data
+        name            probes;
+ 
+        // Write at same frequency as fields
+        writeControl    outputTime;
+        writeInterval   1;
+ 
+        // Fields to be probed
+        fields          (p);
+ 
+        // Optional: do not recalculate cells if mesh moves
+        fixedLocations  false;
+ 
+        // Optional: interpolation scheme to use (default is cell)
+        //interpolationScheme cellPoint;
+ 
+        probeLocations
+        (
+            ( -0.5 0. 0. )      // at cylinder leading edge
+            ( 0. 0.5 0. )      // at cylinder upper side 
+        );
+ 
+        // Optional: filter out points that haven't been found. Default
+        //           is to include them (with value -VGREAT)
+        
+	//includeOutOfBounds  true;
+
+
+
+// ************************************************************************* //

@@ -1,0 +1,4 @@
+rhoEnergyFoam.C
+BCs/rho/fixedRhoFvPatchScalarField.C
+
+EXE = $(FOAM_APPBIN)/rhoEnergyFoamOriginalOpt

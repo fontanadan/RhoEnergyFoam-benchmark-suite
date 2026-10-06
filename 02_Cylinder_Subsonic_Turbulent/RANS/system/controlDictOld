@@ -1,0 +1,160 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     rhoEnergyFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         4000;
+
+deltaT          0.000002;
+
+writeControl    adjustableRunTime;
+
+writeInterval   1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo         2.0;
+
+maxDeltaT       1.;
+
+pressArtDiff    true; //activate artificial diffusion on pressure
+convArtDiff     false; //activate artificial diffusion on pressure
+
+ducLevelPress       0.00;
+ducLevelConv        0.05;
+epsilon             0.014;
+minfty		    0.01; //Reference Mach^2 number needed by AUSM flux
+ku                  0.75;
+kp                  0.25;
+sigma               1.;
+
+
+functions
+{
+ 	
+  #include "fieldAverageDict"
+  
+  probeP
+  {
+        type            probes;
+        libs            (sampling);
+
+        // Name of the directory for probe data
+        name            probes;
+
+        // Write at same frequency as fields
+        writeControl    outputTime;
+        writeInterval   1;
+
+        // Fields to be probed
+        fields          (p);
+
+        // Optional: do not recalculate cells if mesh moves
+        fixedLocations  false;
+
+        // Optional: interpolation scheme to use (default is cell)
+        //interpolationScheme cellPoint;
+
+        probeLocations
+        (
+            ( -0.5 0. 0. )      // at cylinder leading edge
+            ( 0. 0.5 0. )      // at cylinder upper side 
+        );
+
+        // Optional: filter out points that haven't been found. Default
+        //           is to include them (with value -VGREAT)
+
+        //includeOutOfBounds  true;
+  }
+
+
+  forces
+  {
+ 	type forces;
+ 	libs ("libforces.so");
+ 	rhoName rhoInf;
+ 	UName  U;
+ 	pName  p;
+ 	rhoInf 1;
+ 	patches (cylinder);
+ 	CofR (0 0 0);
+ 	writeControl outputTime;
+ 	writeInterval 1;
+  }
+ 
+  forceCoeffs
+  {
+	// rhoInf - reference density
+	// CofR - Centre of rotation
+ 	// dragDir - Direction of drag coefficient
+ 	// liftDir - Direction of lift coefficient
+ 	// pitchAxis - Pitching moment axis
+ 	// magUinf - free stream velocity magnitude
+ 	// lRef - reference length
+ 	// Aref - reference area
+ 	type forceCoeffs;
+ 	libs ("libforces.so");
+ 	patches (cylinder);
+ 	rhoName rhoInf;
+ 	UName  U;
+ 	pName  p;
+ 	rhoInf 1;
+ 	CofR (0 0 0);
+ 	liftDir (0 1 0);
+ 	dragDir (1 0 0);
+ 	pitchAxis (0 0 1);
+ 	magUInf 0.1183 ;
+ 	lRef 1; // cylinder max diameter
+ 	Aref 2.5; //projected area from cylinder
+ 	writeControl outputTime;
+ 	writeInterval 1;
+  }
+  
+  writeduc
+  {
+        type writeObjects;
+        libs ( "libutilityFunctionObjects.so" );
+        objects ("ducSensor");
+        writeControl     outputTime;
+	writeInterval		1;
+  }
+
+
+};
+
+
+// ************************************************************************* //
