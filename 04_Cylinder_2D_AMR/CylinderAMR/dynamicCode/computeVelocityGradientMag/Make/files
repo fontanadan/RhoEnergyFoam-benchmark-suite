@@ -1,0 +1,6 @@
+/* dynamicCode:
+ * SHA1 = 86e058c56627e1e758a1298682e8a07a91401ac9
+ */
+functionObjectTemplate.C
+
+LIB = $(PWD)/../platforms/$(WM_OPTIONS)/lib/libcomputeVelocityGradientMag_86e058c56627e1e758a1298682e8a07a91401ac9
