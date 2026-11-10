@@ -17,7 +17,6 @@ This repository contains a comprehensive suite of **test cases and numerical ben
   - [4. 2D Cylinder with Adaptive Mesh Refinement (AMR)](#4-2d-cylinder-with-adaptive-mesh-refinement-amr)
 - [📂 Repository Structure](#-repository-structure)
 - [🛠️ Requirements & Installation](#️-requirements--installation)
-- 
 ---
 
 ## ⚡ Solver Overview
