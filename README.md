@@ -148,20 +148,3 @@ This repository contains a comprehensive suite of **test cases and numerical ben
    ```
 
 ---
-
-## 📖 References
-
-### Primary Publications
-
-1. **Fontana, D., Piccolo, A., Spisso, I., Guerrero Rivas, J. E., & Pirozzoli, S.**
-   *rhoEnergyFoam: A High-Fidelity, Low-Dissipative Solver for Compressible Navier-Stokes Equations in OpenFOAM*.
-   *OpenFOAM Journal*.
-2. **Modesti, D., & Pirozzoli, S. (2017)**.
-   *A low-dissipative solver for turbulent compressible flows on unstructured meshes, with OpenFOAM implementation*.
-   *Computers & Fluids*, 152, 14–23. https://doi.org/10.1016/j.compfluid.2017.04.012
-
-### Key Numerical & Methodological References
-
-* **Energy-Preserving Central Flux**: Pirozzoli, S. (2010). *Generalized conservative approximations of split convective derivative operators*. *Journal of Computational Physics*, 229(19), 7180–7190.
-* **AUSM Flux Splitting**: Liou, M. S., & Steffen, C. (1993). *A new flux splitting scheme*. *Journal of Computational Physics*, 107(1), 23–39.
-* **Ducros Shock Sensor**: Ducros, F., Ferrand, V., Nicoud, F., Weber, C., Darracq, D., Gacherieu, C., & Poinsot, T. (1999). *Large-eddy simulation of the shock/turbulence interaction*. *Journal of Computational Physics*, 152(2), 517–549.
