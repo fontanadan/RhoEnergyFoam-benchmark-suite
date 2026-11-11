@@ -144,5 +144,23 @@ This repository contains a comprehensive suite of **test cases and numerical ben
    ```bash
    wmake
    ```
+### 3. Running simulations
+
+1. Source the OpenFOAM environment configuration file:
+
+   ```bash
+   source /path/to/openfoam-v2606/etc/bashrc
+   ```
+2. Go in the case directory, for example the folder of the Sod shock tube:
+
+   ```bash
+   cd /01_SodShockTube
+   ```
+3. Run the simulation:
+
+   ```bash
+   rhoEnergyFoamOriginalOpt
+   ```
+   
 
 ---
